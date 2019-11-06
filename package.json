@@ -1,0 +1,33 @@
+{
+  "name": "hangman",
+  "version": "1.0.0",
+  "description": "Hangman App for Javascript Fundamentals Fall 2019",
+  "engine": {
+    "node": "12.10.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "testAll": "mocha ./test/**/*-test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachwaite/hangman.git"
+  },
+  "author": "Zach Waite",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zachwaite/hangman/issues"
+  },
+  "homepage": "https://github.com/zachwaite/hangman#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-arrays": "^2.0.0",
+    "mocha": "^6.2.2",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0"
+  }
+}
