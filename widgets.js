@@ -13,18 +13,15 @@ const fullwidth = (char) => {
 H1 = fullwidth('=');
 H2 = fullwidth('-');
 BR = fullwidth(' ');
-TAB = '    ';
-TAB2 = TAB.repeat(2);
-TAB3 = TAB.repeat(3);
 
 
 const TEMPLATES6 = {
   6: "   ___\n      |\n      |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "6 tries left",
   5: "   ___\n   0  |\n      |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "5 tries left",
-  4: "   ___\n   0  |\n   |  |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "5 tries left",
-  3: "   ___\n   0  |\n  /|  |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "5 tries left",
-  2: "   ___\n   0  |\n  /|\\ |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "5 tries left",
-  1: "   ___\n   0  |\n  /|\\ |\n  /   |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "5 tries left",
+  4: "   ___\n   0  |\n   |  |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "4 tries left",
+  3: "   ___\n   0  |\n  /|  |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "3 tries left",
+  2: "   ___\n   0  |\n  /|\\ |\n      |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "2 tries left",
+  1: "   ___\n   0  |\n  /|\\ |\n  /   |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "1 try left",
   0: "   ___\n   0  |\n  /|\\ |\n  / \\ |\n      |\n-----------\n^         ^" + " ".repeat(20) +  "You're out!",
 }
 
@@ -51,16 +48,35 @@ const Game = (wordBank, templates) => {
   };
 
   const render = () => {
+    let stateOutput = [
+      gameState.map(x => x.repr).join(' '),
+      '  '.repeat(6 - gameAnswer.length),
+      ' '.repeat(20),
+      'Guesses History: ' + gameHistory.join(', ')
+    ];
     let output = [
       H2,
       gameTemplates[guessesRemaining],
       BR,
-      gameState.map(x => x.repr).join(' ') + ' '.repeat(20) + 'Guesses History: ' + gameHistory.join(', '),
+      stateOutput.join(''),
       BR,
       H2,
       BR,
     ];
     console.log(output.join('\n'));
+  };
+
+  const validateInput = ( raw ) => {
+    const pat = new RegExp('^[a-zA-Z]$');
+    return pat.test(raw);
+  };
+
+  const sameGuess = ( guess ) => {
+    if ( gameHistory.find(x => x === guess ) ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const playTurn = (input) => {
@@ -94,7 +110,7 @@ const Game = (wordBank, templates) => {
 
   const randomWord = (words) => {
     const ndx = Math.floor(Math.random() * words.length)
-    return words[ndx];
+    return words[ndx].toUpperCase();
   };
 
 
@@ -106,6 +122,8 @@ const Game = (wordBank, templates) => {
   let gameHistory = [];
 
   return {
+    sameGuess: sameGuess,
+    validateInput: validateInput,
     getAnswer: getAnswer,
     getOutcome: getOutcome,
     render: render,
@@ -141,13 +159,13 @@ const GameSummary = {
   },
   render: (vals) => {
     const outputStats = [
-      `Games Played: ${vals.totalGames}`,
+      `Rounds Complete: ${vals.totalGames}`,
       `Wins: ${vals.win}`,
       `Losses: ${vals.loss}`,
     ];
     const output = [
       BR,
-      'Session History:' + ' '.repeat(26) + outputStats.join(' | '),
+      `Current Round: ${vals.totalGames + 1}` + ' '.repeat(24) + outputStats.join(' | '),
     ];
     console.log(output.join('\n'));
   }
@@ -159,6 +177,7 @@ const GameSession = (config) => {
     main: () => {
       let gameCount = 0;
       let game = false;
+      let msg = [];
 
       while ( gameCount < config.maxGames ) {
         console.clear();
@@ -176,15 +195,45 @@ const GameSession = (config) => {
         // render game screen
         game.render();
 
-        // play a turn
+        // render messages
+        while ( msg.length ) {
+          console.log(msg.shift());
+        }
+
+        // play a turn or display results
         if ( !game.getOutcome() ) {
-          const input = prompt.question('Guess a letter > ');
-          game.playTurn(input);
+          const rawInput = prompt.question('Guess a letter > ').toUpperCase();
+          let input = rawInput;
+
+          if ( rawInput.length > 1 ) {
+            input = rawInput[0];
+            msg.push(`You entered **${rawInput}**. Only the FIRST LETTER **${input}** was used.\n`);
+          } 
+
+          const validInput = game.validateInput(input);
+          if ( !validInput ) {
+            msg.push(`You entered **${input}**. Only LETTER values are accepted.\n`);
+          }
+
+          const reusedGuess = game.sameGuess(input);
+          if ( reusedGuess ) {
+            msg.push(`You entered **${input}**. This value has already been guessed. Please pick a new letter.\n`);
+          }
+
+          if ( validInput && !reusedGuess ) {
+            game.playTurn(input);
+          }
+
         } else {
           gameHistory.push({outcome: game.getOutcome()});
-          console.log(`Game Over. Outcome: ${game.getOutcome()}`);
-          const playAgain = prompt.question('Play Again? (Y/N) >');
-          if ( playAgain.toLowerCase() === 'n' ) {
+          if ( game.getOutcome() === 'win' ) {
+            console.log(`Hooray!!! The answer was **${game.getAnswer()}**. You win this round!!!\n`);
+          } else {
+            console.log(`Sorry... The answer was **${game.getAnswer()}**. You lose this round.\n`);
+          }
+
+          const playAgain = prompt.question('Press any key to continue >');
+          if ( playAgain.toUpperCase() === 'n' ) {
             break;
           }
           game = false;

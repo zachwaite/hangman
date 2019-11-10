@@ -3,7 +3,7 @@ const wordBank = require('./word-bank.json');
 const widgets = require('./widgets.js');
 
 const config = {
-  maxGames: 10,
+  maxGames: Infinity,
   wordBank: wordBank,
   templates: widgets.TEMPLATES6,
 };
