@@ -1,6 +1,14 @@
-const prompt = require('readline-sync');
+// const prompt = require('readline-sync');
 const wordBank = require('./word-bank.json');
+const widgets = require('./widgets.js');
 
-prompt.question('Type something> ');
+const config = {
+  maxGames: 10,
+  wordBank: wordBank,
+  templates: widgets.TEMPLATES6,
+};
 
-console.log(wordBank);
+
+const gameSession = widgets.GameSession(config);
+gameSession.main();
+
