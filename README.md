@@ -1,6 +1,8 @@
 # hangman
 
-Hangman Assignment for Javascript Fundamentals Fall 2019
+Hangman Assignment for Javascript Fundamentals Fall 2019.
+
+It is a fun Javascript implementation of the classic game.
 
 ## Demo
 
@@ -36,10 +38,12 @@ configuration options are:
   using the same pattern (see `src/uiWidgets.js` for the template pattern).
   e.g. one could make a new template set `ui.TEMPLATES10` by putting shoes
   on the stick figure from `ui.TEMPLATES8`. The game will dynamically adapt
-  as long as the template structure follows the same pattern. More on this
-  below.
+  as long as the template structure follows the same pattern. This is
+  because the game bases the number of guesses on the length of the templates
+  array. ASCII art afficionados may be able to make very long exciting games
+  of hangman with minimal changes.
 
-## Technical Description
+## Technical Overview
 
 The game is modular and somewhat object oriented in it's implementation.
 Specifically, a `GameSession` module is configured using the global
@@ -48,12 +52,13 @@ application loop, where child widgets are created, updated and destroyed,
 application state variables are updated and play continues until the main
 loop is exited. A small pattern is used throughout the game to standardize
 the implementation of the components used to build the UI. Specifically,
-each UI component (I call these `widgets`), implements a `.render()` method, where the serialization to the console takes place. The data to
+each UI component (I call these `widgets`), implements a `.render()` method,
+where the serialization to the console takes place. The data to
 be rendered may be passed to `render()` explicitly via parameters or
 implicitly via private variable access. The widgets use closures and the
 _Revealing Module Pattern_ to provide persistent state during the game.
-This was by design, to avoid excessive duplication and passing state variables as parameters each round. It also fits well with the stateful
-nature of the game.
+This was by design, to avoid excessive duplication and passing state variables
+as parameters each round. It also fits well with the stateful nature of the game.
 
 ### The widgets
 
