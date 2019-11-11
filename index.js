@@ -1,23 +1,30 @@
 /**
  * Main entry point for hangman game.
  *
- * See src/widgets.js for component definitions.
+ * See src/* for components
  *
  */
 const wordBank = require('./word-bank.json');
-const widgets = require('./src/widgets.js');
+const ui = require('./src/uiWidgets.js');
 const GameSession = require('./src/GameSession.js').GameSession;
 
 /**
  * Configuration
  *
- * templates: TEMPLATE6 or TEMPLATE8. Allows different number of guesses by manipulating the avatar
+ * Items
+ * =============
+ * - maxGames {int}: Limt the number of games in a session. Helpful to keep you
+ *   from staying up all night playing hangman.
+ * - wordBank {Array}: A single array of random words.
+ * - templates {Object}: (import and use ui.TEMPLATE6 or ui.TEMPLATE8) Allows
+ *   different number of guesses by providing an avatar with the right number
+ *   of parts.
  *
  */
 const config = {
   maxGames: Infinity,
   wordBank: wordBank,
-  templates: widgets.TEMPLATES6,
+  templates: ui.TEMPLATES6,
 };
 
 

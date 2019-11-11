@@ -130,6 +130,22 @@ const GameSession = (config) => {
   const gameHistory = [];
 
   return {
+
+    /**
+     * Main execution loop
+     *
+     * Each pass through the loop, the appropriate widgets are updated and
+     * serialized to the console via the `Widget.render()` method as needed.
+     *
+     * The widgets (top down):
+     * - GameHeader (title, version)
+     * - GameSummary (summary stats)
+     * - Game (hangman avatar, tries remaining, guesses state & history)
+     * - GameFooter (any messages to user)
+     * - GameResult (outcome messages)
+     * - PlayAgain (prompt to break before clearing console)
+     *
+     */
     main: () => {
       let gameCount = 0;
       let game = false;
@@ -143,7 +159,7 @@ const GameSession = (config) => {
         const summaryData = GameSummary.summarize(gameHistory);
         GameSummary.render(summaryData);
 
-        // start a new game if on round 1 or previous game is over
+        // start a new game if on round 1 or previous game is complete
         if ( !game ) {
           game = Game(config.wordBank, config.templates);
           gameCount++;
@@ -153,8 +169,9 @@ const GameSession = (config) => {
 
         GameFooter.render(msgList);
 
-        // play a turn or transition to new game
         if ( !game.getOutcome() ) {
+          // if a game is underway, prepare input and play a turn
+
           const rawInput = prompt.question('Guess a letter > ').toUpperCase();
           let input = rawInput;
 
@@ -178,6 +195,8 @@ const GameSession = (config) => {
           }
 
         } else {
+          // game is complete, transition to new game
+
           gameHistory.push({outcome: game.getOutcome()});
           GameResult.render({outcome: game.getOutcome(), answer: game.getAnswer()});
           PlayAgain.render();
