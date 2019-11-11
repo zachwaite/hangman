@@ -1,4 +1,4 @@
-const widgets = require('./widgets.js');
+const ui = require('./uiWidgets.js');
 
 
 /**
@@ -52,13 +52,13 @@ const Game = (wordBank, templates) => {
       'Guesses History: ' + gameHistory.join(', ')
     ];
     let output = [
-      widgets.H2,
+      ui.H2,
       gameTemplates[guessesRemaining],
-      widgets.BR,
+      ui.BR,
       stateOutput.join(''),
-      widgets.BR,
-      widgets.H2,
-      widgets.BR,
+      ui.BR,
+      ui.H2,
+      ui.BR,
     ];
     console.log(output.join('\n'));
   };

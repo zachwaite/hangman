@@ -1,6 +1,6 @@
 const prompt = require('readline-sync');
 const Game = require('./Game.js').Game;
-const widgets = require('./widgets.js');
+const ui = require('./uiWidgets.js');
 
 
 /**
@@ -17,10 +17,10 @@ const GameHeader = {
    */
   render: () => {
     const output = [
-      widgets.H1,
+      ui.H1,
       'Console Hangman' + ' '.repeat(54) + 'Version 1.0',
       ' '.repeat(58) + '(Type ctl + c to quit)',
-      widgets.H1,
+      ui.H1,
     ];
     console.log(output.join('\n'));
   }
@@ -67,7 +67,7 @@ const GameSummary = {
     ];
 
     const output = [
-      widgets.BR,
+      ui.BR,
       `Current Round: ${vals.totalGames + 1}` + ' '.repeat(24) + outputStats.join(' | '),
     ];
 
