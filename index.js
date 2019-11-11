@@ -4,9 +4,9 @@
  * See src/* for components
  *
  */
-const wordBank = require('./word-bank.json');
-const ui = require('./src/uiWidgets.js');
-const GameSession = require('./src/GameSession.js').GameSession;
+const wordBank = require("./word-bank.json");
+const ui = require("./src/uiWidgets.js");
+const GameSession = require("./src/GameSession.js").GameSession;
 
 /**
  * Configuration
@@ -24,10 +24,8 @@ const GameSession = require('./src/GameSession.js').GameSession;
 const config = {
   maxGames: Infinity,
   wordBank: wordBank,
-  templates: ui.TEMPLATES6,
+  templates: ui.TEMPLATES6
 };
-
 
 const gameSession = GameSession(config);
 gameSession.main();
-

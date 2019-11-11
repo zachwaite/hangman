@@ -1,5 +1,4 @@
-const ui = require('./uiWidgets.js');
-
+const ui = require("./uiWidgets.js");
 
 /**
  * Game
@@ -10,7 +9,6 @@ const ui = require('./uiWidgets.js');
  * subsequent guess).
  */
 const Game = (wordBank, templates) => {
-
   /**
    * Getter for the gameOutcome private variable.
    */
@@ -37,30 +35,30 @@ const Game = (wordBank, templates) => {
    * @param word {str}: The result of the randomWord() method.
    * @returns {Array}: An array of objects e.g. [{letter: A, guessed: false, repr: '_'}, ...]
    */
-  const initState = (word) => {
-    return word.split('').reduce((acc, cur) => {
-      acc.push({letter: cur, guessed: false, repr: '_'});
+  const initState = word => {
+    return word.split("").reduce((acc, cur) => {
+      acc.push({ letter: cur, guessed: false, repr: "_" });
       return acc;
     }, []);
   };
 
   const render = () => {
     let stateOutput = [
-      gameState.map(x => x.repr).join(' '),
-      '  '.repeat(6 - gameAnswer.length),
-      ' '.repeat(20),
-      'Guesses History: ' + gameHistory.join(', ')
+      gameState.map(x => x.repr).join(" "),
+      "  ".repeat(6 - gameAnswer.length),
+      " ".repeat(20),
+      "Guesses History: " + gameHistory.join(", ")
     ];
     let output = [
       ui.H2,
       gameTemplates[guessesRemaining],
       ui.BR,
-      stateOutput.join(''),
+      stateOutput.join(""),
       ui.BR,
       ui.H2,
-      ui.BR,
+      ui.BR
     ];
-    console.log(output.join('\n'));
+    console.log(output.join("\n"));
   };
 
   /**
@@ -69,8 +67,8 @@ const Game = (wordBank, templates) => {
    * @param raw {str}: String input
    * @returns {bool}: true if input is valid
    */
-  const validateInput = (raw) => {
-    const pat = new RegExp('^[a-zA-Z]$');
+  const validateInput = raw => {
+    const pat = new RegExp("^[a-zA-Z]$");
     return pat.test(raw);
   };
 
@@ -82,8 +80,8 @@ const Game = (wordBank, templates) => {
    * @returns {bool}: true if the guess has already been tried
    *
    */
-  const sameGuess = (guess) => {
-    if ( gameHistory.find(x => x === guess ) ) {
+  const sameGuess = guess => {
+    if (gameHistory.find(x => x === guess)) {
       return true;
     } else {
       return false;
@@ -103,22 +101,26 @@ const Game = (wordBank, templates) => {
    *
    * @returns {bool}: Always true
    */
-  const playTurn = (input) => {
+  const playTurn = input => {
     gameHistory.push(input);
 
-    if ( !gameState.find(x => x.letter === input) ) {
+    if (!gameState.find(x => x.letter === input)) {
       guessesRemaining--;
     } else {
       gameState.forEach(x => {
-        if ( x.letter === input ) {
+        if (x.letter === input) {
           x.guessed = true;
           x.repr = x.letter;
         }
       });
     }
 
-    if ( gameState.filter(x => x.guessed === false).length === 0 ){ gameOutcome = 'win'; }
-    if ( guessesRemaining === 0 ) { gameOutcome = 'loss'; }
+    if (gameState.filter(x => x.guessed === false).length === 0) {
+      gameOutcome = "win";
+    }
+    if (guessesRemaining === 0) {
+      gameOutcome = "loss";
+    }
 
     return true;
   };
@@ -129,16 +131,15 @@ const Game = (wordBank, templates) => {
    * @param words {Array}: An array of words
    * @returns {str}: A single UPPERCASED word
    */
-  const randomWord = (words) => {
-    const ndx = Math.floor(Math.random() * words.length)
+  const randomWord = words => {
+    const ndx = Math.floor(Math.random() * words.length);
     return words[ndx].toUpperCase();
   };
-
 
   let guessesRemaining = Object.keys(templates).length - 1;
   let gameAnswer = randomWord(wordBank);
   let gameTemplates = templates;
-  let gameOutcome = false; 
+  let gameOutcome = false;
   let gameState = initState(gameAnswer);
   let gameHistory = [];
 
@@ -148,7 +149,7 @@ const Game = (wordBank, templates) => {
     getAnswer: getAnswer,
     getOutcome: getOutcome,
     render: render,
-    playTurn: playTurn,
+    playTurn: playTurn
   };
 };
 
